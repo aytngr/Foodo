@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1014598270341",
+    "firebase_url": "https://education-b29e5-default-rtdb.firebaseio.com",
+    "project_id": "education-b29e5",
+    "storage_bucket": "education-b29e5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1014598270341:android:6fda5450bbe7978d17d8ec",
+        "android_client_info": {
+          "package_name": "com.example.contactsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1014598270341-lelkb0f30l6pl85rvajho4vic56pf5f5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaYMtLMnxYDdq0oTbc-l-WCJQZae2Og8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1014598270341-lelkb0f30l6pl85rvajho4vic56pf5f5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1014598270341:android:f829e209d7b4698917d8ec",
+        "android_client_info": {
+          "package_name": "gr.aytn.foodapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1014598270341-lelkb0f30l6pl85rvajho4vic56pf5f5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaYMtLMnxYDdq0oTbc-l-WCJQZae2Og8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1014598270341-lelkb0f30l6pl85rvajho4vic56pf5f5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
