@@ -98,7 +98,7 @@ class HomeFragment : Fragment() , SearchView.OnQueryTextListener{
                 }
             }
 
-        binding.spinner2.adapter = filterAdapter
+        binding.spinnerAdapter = filterAdapter
 
 
 

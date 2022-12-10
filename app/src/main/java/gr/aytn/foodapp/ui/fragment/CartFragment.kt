@@ -21,6 +21,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,14 +40,18 @@ import kotlinx.coroutines.launch
 class CartFragment : Fragment() {
     private lateinit var binding: FragmentCartBinding
     private lateinit var viewmodel: CartViewModel
+    private lateinit var auth :FirebaseAuth
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_cart, container, false)
 
-        val auth = Firebase.auth
+        binding.cartFragment = this
+        auth = Firebase.auth
+
         viewmodel.getFoodsCart(auth.currentUser!!.email!!)
+
         viewmodel.foodCartList.observe(viewLifecycleOwner, Observer {
             if(it!=null){
                 if(it.isEmpty()){
@@ -58,37 +63,36 @@ class CartFragment : Fragment() {
                     for(food in it){
                         total += food.price * food.orderAmount
                     }
-                    binding.confirmCart.text = "Confirm Cart - ${total} $"
+
+                    binding.btnText = "Confirm Cart - $total $"
                 }
                 val adapter = FoodCartAdapter(requireContext(),it, viewmodel,auth)
                 binding.adapter = adapter
             }
         })
-        binding.confirmCart.setOnClickListener {
-
-            lifecycleScope.launch{
-                binding.emptyTextView.visibility = View.GONE
-                binding.confirmCart.visibility=View.GONE
-                binding.recyclerView3.visibility=View.GONE
-                binding.animationConfirmed.visibility = View.VISIBLE
-                binding.animationConfirmed.playAnimation()
-                delay(5000)
-                binding.emptyTextView.visibility = View.VISIBLE
-                binding.animationConfirmed.visibility = View.GONE
-                delay(10000)
-                showNotification()
-            }
-            val foodCartList = viewmodel.foodCartList.value
-            if(foodCartList!=null){
-                for (food in foodCartList){
-                    viewmodel.deleteFood(food.cartId,auth.currentUser!!.email!!)
-                }
-            }
-
-
-        }
 
         return binding.root
+    }
+    
+    fun confirmBtnClick(){
+        lifecycleScope.launch{
+            binding.emptyTextView.visibility = View.GONE
+            binding.confirmCart.visibility=View.GONE
+            binding.recyclerView3.visibility=View.GONE
+            binding.animationConfirmed.visibility = View.VISIBLE
+            binding.animationConfirmed.playAnimation()
+            delay(4000)
+            binding.emptyTextView.visibility = View.VISIBLE
+            binding.animationConfirmed.visibility = View.GONE
+            delay(10000)
+            showNotification()
+        }
+        val foodCartList = viewmodel.foodCartList.value
+        if(foodCartList!=null){
+            for (food in foodCartList){
+                viewmodel.deleteFood(food.cartId,auth.currentUser!!.email!!)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

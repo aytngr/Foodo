@@ -12,10 +12,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import gr.aytn.foodapp.R
+import gr.aytn.foodapp.data.model.Food
 import gr.aytn.foodapp.data.model.FoodCart
 import gr.aytn.foodapp.databinding.FragmentDetailBinding
 import gr.aytn.foodapp.ui.viewmodel.DetailViewModel
@@ -27,6 +29,8 @@ import kotlinx.coroutines.launch
 class DetailFragment : Fragment() {
     private lateinit var binding: FragmentDetailBinding
     private lateinit var viewmodel: DetailViewModel
+    private lateinit var auth: FirebaseAuth
+    private var count: Int = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,57 +40,61 @@ class DetailFragment : Fragment() {
         val bundle: DetailFragmentArgs by navArgs()
         val food = bundle.food
 
-        val auth = Firebase.auth
+        binding.detailFragment=this
+
+        binding.food = food
+
+        auth = Firebase.auth
 
         viewmodel.getFoodsCart(auth.currentUser!!.email!!)
 
         Glide.with(this).load("http://kasimadalan.pe.hu/foods/images/${food.image}")
             .override(250,250)
             .into(binding.foodDetailImage)
-        binding.foodDetailName.text = food.name
-        binding.foodDetailCategory.text = "Category: ${food.category}"
-        binding.foodDetailPrice.text = "${food.price} $"
 
+        binding.count = 0
 
-
-        var count = binding.orderCount.text.toString().toInt()
-        binding.btnIncrementOrder.setOnClickListener{
-            if(count<10){
-                count ++
-                binding.orderCount.text = (count).toString()
-                binding.btnAddToCart.text = "Add to cart - ${food.price*count} $"
-            }
-        }
-        binding.btnDecrementOrder.setOnClickListener{
-            if(count>0){
-                count --
-                binding.orderCount.text = (count).toString()
-                binding.btnAddToCart.text = "Add to cart - ${food.price*count} $"
-            }
-        }
-        binding.btnAddToCart.setOnClickListener {
-            if(count != 0){
-                var sameFoodExists = false
-                var sameFood: FoodCart? = null
-                viewmodel.foodCartList.observe(viewLifecycleOwner, Observer {foodCartList ->
-                    val sameFoodList = foodCartList.filter { it.name == food.name }
-                    if(sameFoodList.isNotEmpty()){
-                        sameFoodExists = true
-                        sameFood = sameFoodList[0]
-                    }
-                })
-                if(sameFoodExists){
-                    if(sameFood != null){
-                        viewmodel.deleteFood(sameFood!!.cartId, auth.currentUser!!.email!!)
-                        viewmodel.insertFood(food.name,food.image,food.price,food.category,sameFood!!.orderAmount+count,auth.currentUser!!.email!!)
-                    }
-                }else{
-                    viewmodel.insertFood(food.name,food.image,food.price,food.category,count,auth.currentUser!!.email!!)
-                }
-            }
-            Navigation.findNavController(it).navigate(R.id.toHome)
-        }
         return binding.root
+    }
+
+    fun addToBasketBtnClick(food: Food){
+        if(count != 0){
+            var sameFoodExists = false
+            var sameFood: FoodCart? = null
+            viewmodel.foodCartList.observe(viewLifecycleOwner, Observer {foodCartList ->
+                val sameFoodList = foodCartList.filter { it.name == food.name }
+                if(sameFoodList.isNotEmpty()){
+                    sameFoodExists = true
+                    sameFood = sameFoodList[0]
+                }
+            })
+            if(sameFoodExists){
+                if(sameFood != null){
+                    viewmodel.deleteFood(sameFood!!.cartId, auth.currentUser!!.email!!)
+                    viewmodel.insertFood(food.name,food.image,food.price,food.category,sameFood!!.orderAmount+count,auth.currentUser!!.email!!)
+                }
+            }else{
+                viewmodel.insertFood(food.name,food.image,food.price,food.category,count,auth.currentUser!!.email!!)
+            }
+        }
+        Navigation.findNavController(requireActivity(),R.id.fragmentContainerView)
+            .navigate(R.id.toHome)
+    }
+    fun incrementBtnClick(){
+        count = binding.orderCount.text.toString().toInt()
+        Log.i("detail", count.toString())
+        if(count<10){
+            count ++
+            Log.i("detail", count.toString())
+            binding.count = count
+        }
+    }
+    fun decrementBtnClick(){
+        count = binding.orderCount.text.toString().toInt()
+        if(count>0){
+            count --
+            binding.count = count
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

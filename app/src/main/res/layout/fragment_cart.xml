@@ -7,6 +7,12 @@
         <variable
             name="adapter"
             type="gr.aytn.foodapp.ui.adapter.FoodCartAdapter" />
+        <variable
+            name="btnText"
+            type="String" />
+        <variable
+            name="cartFragment"
+            type="gr.aytn.foodapp.ui.fragment.CartFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,9 +29,10 @@
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="8dp"
             android:visibility="gone"
+            android:onClick="@{() -> cartFragment.confirmBtnClick()}"
             android:background="@drawable/card_drawable"
             android:fontFamily="@font/quicksand"
-            android:text="Confirm Cart"
+            android:text='@{btnText}'
             android:textColor="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

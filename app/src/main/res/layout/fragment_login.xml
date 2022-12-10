@@ -68,7 +68,7 @@
         android:layout_marginTop="68dp"
         android:paddingHorizontal="20dp"
         android:paddingVertical="10dp"
-        android:text="Sign IN"
+        android:text="Sign in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
